@@ -1,0 +1,4 @@
+# Nunca subir datos reales al repo (GitHub Pages es público)
+*.xls
+*.xlsx
+*.csv

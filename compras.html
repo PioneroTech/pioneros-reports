@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compras · Pioneros Reports</title>
+<link rel="stylesheet" href="shared/theme.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script src="shared/core.js"></script>
+<script src="shared/dashboard.js"></script>
+<script src="shared/compras-model.js"></script>
+<script>
+PR.createDashboard({
+  name: 'Compras',
+  dropTitle: 'Cargá el informe “Compras detalladas en Peso”',
+  searchPlaceholder: 'Producto o proveedor…',
+  tableTitle: 'Compra detallada por producto',
+  entity: { singular: 'Proveedor', rankTitle: 'Principales proveedores' },
+  mustHave: ['Proveedor', 'Subtotal c/ IVA'],
+  normalize: PR.normalizeCompras,
+  kpiTiles: (K, { delta, yearTotal }) => [
+    [PR.fmt.compact(K.usd), 'Compras c/IVA USD', delta],
+    [PR.fmt.compact(K.ars), 'Compras c/IVA $', ''],
+    [PR.fmt.int(K.ents), 'Proveedores', ''],
+    [PR.fmt.compact(K.factProm), 'Factura promedio USD', `<div class="d">${PR.fmt.int(K.facturas)} facturas</div>`],
+    [PR.fmt.compact(K.pagado), 'Comprobantes pagados USD', ''],
+    [PR.fmt.pct(K.pctPagado), '% pagado', '<div class="d">según estado del comprobante</div>'],
+  ],
+  note: 'El informe viene en pesos: USD = importe en pesos ÷ cotización del comprobante, para todas las líneas (también las marcadas como Dólar). ' +
+        'Las notas de crédito restan. “% pagado” usa el estado del comprobante (Pagado); un pago parcial no se cuenta como pagado.',
+});
+</script>
+</body>
+</html>
